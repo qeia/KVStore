@@ -1,7 +1,6 @@
 package com.sid.KVStore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
-import lombok.*;
 
 
 
@@ -20,5 +19,22 @@ public class KVConfiguration extends Configuration {
 
     @JsonProperty
     private String logPath;
+
+    @JsonProperty
+    public boolean master = true;
+
+    @JsonProperty
+    public String replicaHost = null;
+
+    @JsonProperty
+    public int replicaPort = 0;
+
+    @JsonProperty
+    public boolean strongConsistency = false;
+
+    @JsonProperty
+    public boolean hasReplica = false;
+
+
 
 }

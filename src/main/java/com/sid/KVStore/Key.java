@@ -7,7 +7,9 @@ import lombok.*;
 @EqualsAndHashCode
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Key {
+
 
     @JsonProperty
     String key;
