@@ -8,18 +8,6 @@ public class KVConfiguration extends Configuration {
 
     public KVConfiguration (){super();}
 
-
-    public String getLogPath() {
-        return logPath;
-    }
-
-    public void setLogPath(String logPath) {
-        this.logPath = logPath;
-    }
-
-    @JsonProperty
-    private String logPath;
-
     @JsonProperty
     public boolean master = true;
 

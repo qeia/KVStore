@@ -1,7 +1,6 @@
 package com.sid.KVStore;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
+
 import com.sid.KVStore.RequestBuild.BuildAddRequest;
 import com.sid.KVStore.Requests.Add;
 import lombok.SneakyThrows;
@@ -40,7 +39,9 @@ public class KVStore extends ConcurrentHashMap<Key, Value> {
 
             );
             if (kvConfiguration.strongConsistency) {
-                result.get();
+                if (!result.get()) {
+                    throw new RuntimeException("Failed to send request to replica");
+                }
             }
         }
 
