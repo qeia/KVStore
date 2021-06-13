@@ -1,7 +1,9 @@
 package com.sid.KVStore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sid.KVStore.RequestBuild.ReplicationRequestImpl;
 import io.dropwizard.Configuration;
 
+import java.util.List;
 
 
 public class KVConfiguration extends Configuration {
@@ -12,16 +14,11 @@ public class KVConfiguration extends Configuration {
     public boolean master = true;
 
     @JsonProperty
-    public String replicaHost = null;
-
-    @JsonProperty
-    public int replicaPort = 0;
+    public List<ReplicationRequestImpl.HostAndPort> hostAndPorts;
 
     @JsonProperty
     public boolean strongConsistency = false;
 
-    @JsonProperty
-    public boolean hasReplica = false;
 
 
 

@@ -1,47 +1,45 @@
 package com.sid.KVStore;
 
 
-import com.sid.KVStore.RequestBuild.BuildAddRequest;
-import com.sid.KVStore.Requests.Add;
-import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sid.KVStore.Models.Key;
+import com.sid.KVStore.Models.Value;
+import com.sid.KVStore.RequestBuild.ReplicationRequest;
+import com.sid.KVStore.RequestBuild.ReplicationRequestImpl;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 
 public class KVStore extends ConcurrentHashMap<Key, Value> {
 
 
     private KVConfiguration kvConfiguration;
+    private ReplicationRequest replicationRequest;
 
     public KVStore(KVConfiguration kvConfiguration, ExecutorService executorService) {
+
         this.kvConfiguration = kvConfiguration;
-        this.executorService = executorService;
+        if (kvConfiguration.master) {
+            replicationRequest = new ReplicationRequestImpl(kvConfiguration.hostAndPorts, executorService);
+        }
+
     }
 
 
-    private ExecutorService executorService;
 
-    Logger logger = LoggerFactory.getLogger("KVStore");
-
-    @SneakyThrows
     @Override
     public Value put(Key key, Value value) {
+
+        //only put if current timestamp comes after existing timestamp
         Value v = merge(key, value, (v1, v2) -> v1.getDateTime() < v2.getDateTime() ? v2 : v1);
-        if(kvConfiguration.master && kvConfiguration.hasReplica) {
-            Future<Boolean> result = executorService.submit(() ->
 
-                    BuildAddRequest.BuildAndSendAddRequest(new Add(key, v),
-                            kvConfiguration.replicaHost, kvConfiguration.replicaPort)
-
-            );
-            if (kvConfiguration.strongConsistency) {
-                if (!result.get()) {
-                    throw new RuntimeException("Failed to send request to replica");
+        if(kvConfiguration.master) {
+            if (kvConfiguration.strongConsistency){
+                if (!replicationRequest.buildAndSendAddRequest(key, value)) {
+                    throw new RuntimeException("Could not finish the replica request");
                 }
+            } else {
+                replicationRequest.buildAndSendAddRequestAsync(key, value);
             }
         }
 

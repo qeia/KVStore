@@ -1,15 +1,12 @@
-package com.sid.KVStore;
+package com.sid.KVStore.Models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@ToString
-@EqualsAndHashCode
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Key {
-
 
     @JsonProperty
     String key;
