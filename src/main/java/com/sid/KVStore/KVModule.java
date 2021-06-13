@@ -26,7 +26,7 @@ public class KVModule extends AbstractModule {
     @Named("ReplicatorThreadPool")
     public ExecutorService provideReplicatorThreadPool(){
         return new ThreadPoolExecutor(20, 100, 10L, TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(10000));
+                new LinkedBlockingDeque<>(100));
     }
 
 }

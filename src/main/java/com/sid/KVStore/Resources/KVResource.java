@@ -3,10 +3,8 @@ package com.sid.KVStore.Resources;
 
 import com.google.inject.Inject;
 import com.sid.KVStore.KVStore;
-import com.sid.KVStore.Key;
-import com.sid.KVStore.Requests.Add;
-import com.sid.KVStore.Requests.Get;
-import com.sid.KVStore.Value;
+import com.sid.KVStore.Models.Key;
+import com.sid.KVStore.Models.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,19 +24,24 @@ public class KVResource {
     @Path("/set/{key}")
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean createKey (@PathParam("key") String key, String value) {
-        Add add = new Add (new Key(key), new Value(value));
-        logger.info("adding {}", add);
-        kvStore.put(add.getKey(), add.getValue());
+        kvStore.put(new Key(key), new Value(value));
+        return true;
+    }
+
+    @POST
+    @Path("/set/replica/{key}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean createKey (@PathParam("key") String key, Value value) {
+        kvStore.put(new Key(key), value);
         return true;
     }
 
 
     @GET
     @Path("/get/{key}")
-    public Get getValueFromKey (@PathParam("key") String key) {
+    public String getValueFromKey (@PathParam("key") String key) {
         logger.info("getting {}", key);
         Value v = kvStore.get(new Key(key));
-        String value = v == null ? null : v.getValue();
-        return new Get(value);
+        return v == null ? null : v.getValue();
     }
 }

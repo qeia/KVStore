@@ -1,12 +1,16 @@
 # KVStore
-Simple KVStore.
-First build and package the code, then run for master:
+Simple KVStore (one master multiple slave architecture)
+First build and package the code:
+
+`mvn package`
+
+then run for master:
 
 `java  -jar target/KVStore-1.0-SNAPSHOT.jar server config.yml`
 
 and for replica: 
 
-`java -jar target/KVStore-1.0-SNAPSHOT.jarerver replica.yml`
+`java -jar target/KVStore-1.0-SNAPSHOT.jar server replica.yml`
 
 To test, do:
 
